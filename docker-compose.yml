@@ -1,0 +1,58 @@
+version: '3'
+services:
+
+  #PHP Service
+  weather_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    container_name: weather_app
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    tty: true
+    environment:
+      SERVICE_NAME: weather_app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    depends_on:
+      - weather_db
+    networks:
+      - app-network
+
+  #Nginx Service
+  weather_nginx:
+    image: nginx:alpine
+    container_name: weather_nginx
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/nginx.conf/:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+
+  weather_db:
+    image: mysql:5.7.22
+    container_name: weather_db
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./docker/db2:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: weather_db
+      MYSQL_ROOT_PASSWORD: awgwgfg123t12f21wqd2f12f2wf
+      MYSQL_PASSWORD: awgwgfg123t12f21wqd2f12f2wf
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
