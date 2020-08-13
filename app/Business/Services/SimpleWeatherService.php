@@ -16,8 +16,8 @@ class SimpleWeatherService implements IWeatherService
     private WeatherUtilsService $weatherUtilsService;
     private IApiCacheService $apiCacheService;
     private string $apiUrl = "https://api.openweathermap.org/data/2.5/onecall";
-    private float $WALat = 52.23;
-    private float $WALon = 21.01;
+    private float $WALat = 52.237049;
+    private float $WALon = 21.017532;
     private string $lang = "pl";
     private string $units = "metric";
 
